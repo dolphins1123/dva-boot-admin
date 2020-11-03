@@ -1,10 +1,10 @@
-import React from 'react';
-import PageLoading from 'components/Loading/PageLoading';
-import { normal } from 'components/Notification';
-import store from 'cmn-utils/lib/store';
+import React from 'react'
+import PageLoading from 'components/Loading/PageLoading'
+import { normal } from 'components/Notification'
+import store from 'cmn-utils/lib/store'
 
 // 系统通知, 定义使用什么风格的通知，normal或antdNotice
-const notice = normal;
+const notice = normal
 
 /**
  * 应用配置 如请求格式，反回格式，异常处理方式，分页格式等
@@ -14,7 +14,7 @@ export default {
    * HTML的title模板
    */
   htmlTitle: 'DBAdmin - {title}',
-  
+
   /**
    * 系统通知
    */
@@ -23,10 +23,10 @@ export default {
   // 异步请求配置
   request: {
     prefix: '/api',
-
+    credentials: 'omit',
     // 每次请求头部都会带着这些参数
     withHeaders: () => ({
-      token: store.getStore("token"),
+      token: store.getStore('token'),
     }),
 
     /**
@@ -37,32 +37,33 @@ export default {
      * 实际中应该通过服务端反回的response中的
      * 成功失败标识来进行区分
      */
-    afterResponse: response => {
-      const { status, message } = response;
+    afterResponse: (response) => {
+      const { status, message } = response
+
       if (status) {
-        return response;
+        return response
       } else {
-        throw new Error(message);
+        throw new Error(message) //TODO
       }
     },
-    errorHandle: err => {
+    errorHandle: (err) => {
       // 请求错误全局拦截
       if (err.name === 'RequestError') {
-        notice.error(err.text || err.message);
+        notice.error(err.text || err.message)
       }
-    }
+    },
   },
 
   // 全局异常
   exception: {
     global: (err, dispatch) => {
-      const errName = err.name;
+      const errName = err.name
       // RequestError为拦截请求异常
       if (errName === 'RequestError') {
-        notice.error(err.message);
-        console.error(err); 
+        notice.error(err.message)
+        console.error(err)
       } else {
-        console.error(err);
+        console.error(err)
       }
     },
   },
@@ -70,38 +71,38 @@ export default {
   // 分页助手
   pageHelper: {
     // 格式化要发送到后端的数据
-    requestFormat: pageInfo => {
-      const { pageNum, pageSize, filters, sorts } = pageInfo;
+    requestFormat: (pageInfo) => {
+      const { pageNum, pageSize, filters, sorts } = pageInfo
       return {
         currentPage: pageNum,
         showCount: pageSize,
         sortMap: sorts,
-        paramMap: filters
-      };
+        paramMap: filters,
+      }
     },
 
     // 格式化从后端反回的数据
-    responseFormat: resp => {
+    responseFormat: (resp) => {
       const {
         currentPage,
         showCount,
         totalResult,
         dataList,
-        totalPage
-      } = resp.data;
+        totalPage,
+      } = resp.data
       return {
         pageNum: currentPage,
         pageSize: showCount,
         total: totalResult,
         totalPages: totalPage,
-        list: dataList
-      };
-    }
+        list: dataList,
+      }
+    },
   },
 
   // 路由加载效果
   router: {
-    loading: <PageLoading loading />
+    loading: <PageLoading loading />,
   },
 
   /**
@@ -121,14 +122,14 @@ export default {
    * 这里就是配置这两个函数，为了我们模拟数据时可以少写几行代码的 orz...
    */
   mock: {
-    toSuccess: response => ({
+    toSuccess: (response) => ({
       status: true,
-      data: response
+      data: response,
     }),
 
-    toError: message => ({
+    toError: (message) => ({
       status: false,
-      message: message
-    })
-  }
-};
+      message: message,
+    }),
+  },
+}
