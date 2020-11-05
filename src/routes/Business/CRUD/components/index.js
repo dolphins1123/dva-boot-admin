@@ -11,7 +11,7 @@ import createColumns from './columns';
 import './index.less';
 const { Content, Header, Footer } = Layout;
 const Pagination = DataTable.Pagination;
-
+// 練習CRUD
 @connect(({ crud, loading }) => ({
   crud,
   loading: loading.models.crud
