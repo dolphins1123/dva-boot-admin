@@ -5,9 +5,8 @@ export default modelEnhance({
   namespace: 'datatable',
 
   state: {
-    pageData: PageHelper.create(), //  pageData =  pageinfo
+    pageData: PageHelper.create(),
     pageDataSort: PageHelper.create(),
-    //deptTreeData: [],
     dataList: {
       list: [],
     },
@@ -16,7 +15,6 @@ export default modelEnhance({
   //async
   effects: {
     *getKenData({ payload }, { call, put }) {
-      console.log('async payload=========', payload)
       const resp = yield call(getData, payload)
 
       yield put({
@@ -34,16 +32,9 @@ export default modelEnhance({
       state.pageDataSort.list = payload.resp.result.caseList
       state.pageDataSort.total = payload.resp.result.rowCount
       state.pageDataSort.totalPages = 10
-      //state.pageData.total / state.pageData.pageSize
 
-      // state.pageDataSort = state.pageData
       console.log('2========state.pageData', state.pageData)
-      // state.pageData = PageHelper.responseFormat(payload)
-      // console.log('=========getDataSuccess==========2')
-      // state.pageDataSort = PageHelper.responseFormat(payload)
-      // console.log('=========getDataSuccess==========3')
 
-      // console.log('state.pageData', state.pageData)
       return {
         ...state,
         data: payload,

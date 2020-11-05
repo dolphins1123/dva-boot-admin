@@ -1,12 +1,16 @@
 import React from 'react'
 import { connect, router } from 'dva'
-import { Layout, Row, Col, Tree } from 'antd'
+import { Layout, Row, Col, Button } from 'antd'
 import BaseComponent from 'components/BaseComponent'
 import Panel from 'components/Panel'
 import SideLayout from 'components/SideLayout'
 import DataTable, { Editable } from 'components/DataTable'
 import { columns1 } from './columns'
 import './index.less'
+import Toolbar from 'components/Toolbar'
+import SearchBar from 'components/SearchBar'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import createColumns from './ColumnSearch'
 const { Link } = router
 const { Content } = Layout
 const Pagination = DataTable.Pagination
@@ -24,6 +28,7 @@ export default class extends BaseComponent {
       pageSize: 10,
     },
     loading: true,
+    Val: 0,
   }
 
   componentDidMount() {
@@ -53,8 +58,11 @@ export default class extends BaseComponent {
         url: '/datatable/getKenData',
         pageNum: pagination.pageNum,
         pageSize: 10,
-
-        // pageInfo: this.props.pageData(pagination.pageNum, 10),
+        pageInfo: this.props.datatable.pageDataSort.startPage(
+          pagination.pageNum,
+          10
+        ),
+        // pageInfo: this.props.datatable.pageDataSort(pagination.pageNum, 10),
         // pageInfo: state.pageDataSort.sortBy(sorter).jumpPage(2, 10), //pageNum, pageSize
       },
     })
@@ -68,6 +76,15 @@ export default class extends BaseComponent {
   }
 
   render() {
+    const columns = createColumns(this)
+
+    const searchBarProps = {
+      columns,
+      onSearch: (values) => {
+        console.log(values)
+      },
+    }
+
     const { datatable, loading } = this.props
     const { pageData, dataList, pageDataSort } = datatable
     const dataTableProps1 = {
@@ -97,7 +114,28 @@ export default class extends BaseComponent {
     return (
       <Layout className='full-layout page datatable-page'>
         <Content>
-          <Panel title='内部分页'>
+          <Panel title='查詢條件'>
+            <Toolbar
+              className='toolbar-demo'
+              appendLeft={
+                <Button.Group>
+                  <Button type='primary'>
+                    <PlusOutlined />
+                    新增
+                  </Button>
+                  <Button>
+                    <DeleteOutlined />
+                    删除
+                  </Button>
+                </Button.Group>
+              }
+              pullDown={<SearchBar type='grid' {...searchBarProps} />}
+            >
+              <SearchBar {...searchBarProps} group='1' />
+            </Toolbar>
+          </Panel>
+
+          <Panel title='AXIOS 災情資料 分页'>
             <DataTable
               {...dataTableProps1}
               pagination
