@@ -1,30 +1,30 @@
-import React from 'react';
-import { connect } from 'dva';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Layout, Button } from 'antd';
-import BaseComponent from 'components/BaseComponent';
-import Toolbar from 'components/Toolbar';
-import SearchBar from 'components/SearchBar';
-import DataTable from 'components/DataTable';
-import { ModalForm } from 'components/Modal';
-import createColumns from './columns';
-import './index.less';
-const { Content, Header, Footer } = Layout;
-const Pagination = DataTable.Pagination;
+import React from 'react'
+import { connect } from 'dva'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { Layout, Button } from 'antd'
+import BaseComponent from 'components/BaseComponent'
+import Toolbar from 'components/Toolbar'
+import SearchBar from 'components/SearchBar'
+import DataTable from 'components/DataTable'
+import { ModalForm } from 'components/Modal'
+import createColumns from './columns'
+import './index.less'
+const { Content, Header, Footer } = Layout
+const Pagination = DataTable.Pagination
 // 練習CRUD
 @connect(({ crud, loading }) => ({
   crud,
-  loading: loading.models.crud
+  loading: loading.models.crud,
 }))
 export default class extends BaseComponent {
   state = {
     record: null,
     visible: false,
-    rows: []
-  };
+    rows: [],
+  }
 
-  handleDelete = records => {
-    const { rows } = this.state;
+  handleDelete = (records) => {
+    const { rows } = this.state
 
     this.props.dispatch({
       type: 'crud/remove',
@@ -34,32 +34,37 @@ export default class extends BaseComponent {
           // 如果操作成功，在已选择的行中，排除删除的行
           this.setState({
             rows: rows.filter(
-              item => !records.some(jtem => jtem.id === item.id)
-            )
-          });
-        }
-      }
-    });
-  };
+              (item) => !records.some((jtem) => jtem.id === item.id)
+            ),
+          })
+        },
+      },
+    })
+  }
 
   render() {
-    const { crud, loading, dispatch } = this.props;
-    const { pageData, employees } = crud;
-    const columns = createColumns(this, employees);
-    const { rows, record, visible } = this.state;
+    const { crud, loading, dispatch } = this.props
+    const { pageData, employees } = crud
+    const columns = createColumns(this, employees)
+    const { rows, record, visible } = this.state
 
     const searchBarProps = {
       columns,
-      onSearch: values => {
+      onSearch: (values) => {
+        // 查詢
+        console.log('values=', values)
+
         dispatch({
           type: 'crud/getPageInfo',
           payload: {
-            pageData: pageData.filter(values).jumpPage(1, 10)
-          }
-        });
-      }
-    };
+            pageData: pageData.filter(values).jumpPage(1, 10),
+            pageNum: 1,
+          },
+        })
+      },
+    }
 
+    //DATATABLE   資料 dataSource
     const dataTableProps = {
       loading,
       columns,
@@ -68,17 +73,20 @@ export default class extends BaseComponent {
       selectType: 'checkbox',
       showNum: true,
       isScroll: true,
-      selectedRowKeys: rows.map(item => item.id),
+      selectedRowKeys: rows.map((item) => item.id),
       onChange: ({ pageNum, pageSize }) => {
+        //分頁
+        console.log('分頁page', pageNum, pageSize)
         dispatch({
           type: 'crud/getPageInfo',
           payload: {
-            pageData: pageData.jumpPage(pageNum, pageSize)
-          }
-        });
+            pageData: pageData.jumpPage(pageNum, pageSize),
+            pageNum: pageNum,
+          },
+        })
       },
-      onSelect: (keys, rows) => this.setState({ rows })
-    };
+      onSelect: (keys, rows) => this.setState({ rows }),
+    }
 
     const modalFormProps = {
       loading,
@@ -86,17 +94,17 @@ export default class extends BaseComponent {
       visible,
       columns,
       modalOpts: {
-        width: 700
+        width: 700,
       },
       onCancel: () => {
         this.setState({
           record: null,
-          visible: false
-        });
+          visible: false,
+        })
       },
       // 新增、修改都会进到这个方法中，
       // 可以使用主键或是否有record来区分状态
-      onSubmit: values => {
+      onSubmit: (values) => {
         dispatch({
           type: 'crud/save',
           payload: {
@@ -104,35 +112,39 @@ export default class extends BaseComponent {
             success: () => {
               this.setState({
                 record: null,
-                visible: false
-              });
-            }
-          }
-        });
-      }
-    };
-
+                visible: false,
+              })
+            },
+          },
+        })
+      },
+    }
+    //JSX
     return (
-      <Layout className="full-layout crud-page">
+      <Layout className='full-layout crud-page'>
         <Header>
           <Toolbar
             appendLeft={
               <Button.Group>
-                <Button type="primary" icon={<PlusOutlined />} onClick={this.onAdd}>
+                <Button
+                  type='primary'
+                  icon={<PlusOutlined />}
+                  onClick={this.onAdd}
+                >
                   新增
                 </Button>
                 <Button
                   disabled={!rows.length}
-                  onClick={e => this.onDelete(rows)}
+                  onClick={(e) => this.onDelete(rows)}
                   icon={<DeleteOutlined />}
                 >
                   删除
                 </Button>
               </Button.Group>
             }
-            pullDown={<SearchBar type="grid" {...searchBarProps} />}
+            pullDown={<SearchBar type='grid' {...searchBarProps} />}
           >
-            <SearchBar group="abc" {...searchBarProps} />
+            <SearchBar group='abc' {...searchBarProps} />
           </Toolbar>
         </Header>
         <Content>
@@ -143,6 +155,6 @@ export default class extends BaseComponent {
         </Footer>
         <ModalForm {...modalFormProps} />
       </Layout>
-    );
+    )
   }
 }

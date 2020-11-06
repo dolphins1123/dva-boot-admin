@@ -1,110 +1,134 @@
-import modelEnhance from '@/utils/modelEnhance';
-import PageHelper from '@/utils/pageHelper';
+import modelEnhance from '@/utils/modelEnhance'
+import PageHelper from '@/utils/pageHelper'
+import { getData } from '../service/index'
 /**
  * 当第一次加载完页面时为true
  * 可以用这个值阻止切换页面时
  * 多次初始化数据
  */
-let LOADED = false;
+let LOADED = false
 export default modelEnhance({
   namespace: 'crud',
 
   state: {
     pageData: PageHelper.create(),
-    employees: []
+    employees: [],
   },
 
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         if (pathname === '/crud' && !LOADED) {
-          LOADED = true;
+          LOADED = true
           dispatch({
-            type: 'init'
-          });
+            type: 'init', //enter page will 进入页面加载 init
+          })
         }
-      });
-    }
+      })
+    },
   },
 
   effects: {
     // 进入页面加载
     *init({ payload }, { call, put, select }) {
-      const { pageData } = yield select(state => state.crud);
+      const { pageData } = yield select((state) => state.crud)
+      // const resp = yield call(getData, payload)
+      // if (resp.success) {
+      //   console.log('resp success data=', resp)
+      //   pageData.list = resp.result
+      //   pageData.total = resp.totalRowCount
+      //   pageData.totalPages = resp.totalPage
+      // } else {
+      //   alert('none data')
+      //   pageData.list = []
+      // }
+
+      console.log('pageData=', pageData)
+
+      //@@  save data at state.pageData ?
+      //this.pros.state.pageData = pageData
+
       yield put({
         type: 'getPageInfo',
         payload: {
-          pageData: pageData.startPage(1, 10)
-        }
-      });
-      yield put({
-        type: 'getEmployees'
-      });
+          pageData: pageData.startPage(1, 10),
+          pageNum: 1,
+        },
+      })
+      // yield put({
+      //   type: 'getEmployees',
+      // })
     },
     // 获取分页数据
     *getPageInfo({ payload }, { call, put }) {
-      const { pageData } = payload;
+      const { pageData } = payload
+
+      console.log('enter getPageInfo')
+      console.log('payload=', payload)
+
       yield put({
         type: '@request',
         payload: {
           valueField: 'pageData',
           url: '/crud/getList',
-          pageInfo: pageData
-        }
-      });
+          pageInfo: pageData,
+        },
+      })
     },
     // 保存 之后查询分页
     *save({ payload }, { call, put, select, take }) {
-      const { values, success } = payload;
-      const { pageData } = yield select(state => state.crud);
+      alert('save')
+
+      const { values, success } = payload
+      const { pageData } = yield select((state) => state.crud)
       // put是非阻塞的 put.resolve是阻塞型的
       yield put.resolve({
         type: '@request',
         payload: {
           notice: true,
           url: '/crud/save',
-          data: values
-        }
-      });
+          data: values,
+        },
+      })
 
       yield put({
         type: 'getPageInfo',
-        payload: { pageData }
-      });
-      success();
+        payload: { pageData },
+      })
+      success()
     },
     // 修改
     *update({ payload }, { call, put }) {},
     // 删除 之后查询分页
     *remove({ payload }, { call, put, select }) {
-      const { records, success } = payload;
-      const { pageData } = yield select(state => state.crud);
+      const { records, success } = payload
+      const { pageData } = yield select((state) => state.crud)
       yield put({
         type: '@request',
         payload: {
           notice: true,
           url: '/crud/bathDelete',
-          data: records.map(item => item.id)
-        }
-      });
+          data: records.map((item) => item.id),
+        },
+      })
       yield put({
         type: 'getPageInfo',
-        payload: { pageData }
-      });
-      success();
+        payload: { pageData },
+      })
+      success()
     },
     // 获取员工列表
     *getEmployees({ payload }, { call, put }) {
       yield put({
         type: '@request',
-        afterResponse: resp => resp.data,
+        afterResponse: (resp) => resp.data,
         payload: {
           valueField: 'employees',
-          url: '/crud/getWorkEmployee'
-        }
-      });
-    }
+          url: '/crud/getWorkEmployee',
+        },
+      })
+    },
   },
 
-  reducers: {}
-});
+  reducers: {},
+})

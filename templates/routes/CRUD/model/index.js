@@ -20,7 +20,10 @@ export default modelEnhance({
         if (pathname === '/<%=name %>' && !LOADED) {
           LOADED = true;
           dispatch({
-            type: 'init'
+            type: 'init',
+            payload: {
+            pageNum: 1,
+          },
           });
         }
       });
