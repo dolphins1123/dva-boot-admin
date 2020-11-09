@@ -27,3 +27,24 @@ export async function getData(payload) {
     })
     .catch((e) => console.log(e))
 }
+
+//update
+export async function UpdateData(payload) {
+  const model = payload //JSON.stringify(payload)
+
+  const _url = 'https://localhost:44347/api/Customer/UPDATE'
+  return $$.post(
+    _url,
+    model,
+
+    {
+      //responseType: null,  // 不处理返回结果
+      afterResponse: null, // 不走公共 afterResponse
+    }
+  )
+    .then((resp) => {
+      console.log('resp.success=', resp.success)
+      return resp.success
+    })
+    .catch((e) => console.log(e))
+}

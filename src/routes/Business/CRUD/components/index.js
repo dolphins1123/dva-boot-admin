@@ -68,7 +68,7 @@ export default class extends BaseComponent {
     const dataTableProps = {
       loading,
       columns,
-      rowKey: 'id',
+      rowKey: 'CustomerID', //ken   rowkey
       dataItems: pageData,
       selectType: 'checkbox',
       showNum: true,

@@ -1,6 +1,6 @@
 import modelEnhance from '@/utils/modelEnhance'
 import PageHelper from '@/utils/pageHelper'
-import { getData } from '../service/index'
+import { getData, UpdateData } from '../service/index'
 /**
  * 当第一次加载完页面时为true
  * 可以用这个值阻止切换页面时
@@ -65,14 +65,20 @@ export default modelEnhance({
       const { values, success } = payload
       const { pageData } = yield select((state) => state.crud)
       // put是非阻塞的 put.resolve是阻塞型的
-      yield put.resolve({
-        type: '@request',
-        payload: {
-          notice: true,
-          url: '/crud/save',
-          data: values,
-        },
-      })
+
+      //KEN修改  UPDATE  .改進SERVICE 的API
+      console.log('==========save', payload)
+      const isSuccess = yield call(UpdateData, payload.values)
+      console.log('isSuccess=', isSuccess)
+      //註解以下 不進入MOCK
+      // yield put.resolve({
+      //   type: '@request',
+      //   payload: {
+      //     notice: true,
+      //     url: '/crud/save',
+      //     data: values,
+      //   },
+      // })
 
       yield put({
         type: 'getPageInfo',
@@ -114,6 +120,7 @@ export default modelEnhance({
   },
 
   reducers: {
+    //put date
     getDataSuccess(state, { payload }) {
       console.log('getDataSuccess  payload=', payload)
       state.pageData.list = payload.resp.result

@@ -6,6 +6,12 @@ import { router } from 'dva'
 const { Link } = router
 
 export default (self, employees) => [
+  // {
+  //   name: 'CustomerID',
+  //   formItem: {
+  //     type: 'hidden',
+  //   },
+  // },
   {
     title: '客戶ID',
     name: 'CustomerID',
@@ -13,13 +19,17 @@ export default (self, employees) => [
     searchItem: {
       group: 'abc',
     },
-    formItem: {},
+
+    formItem: {
+     
+      rules: [{ required: true, message: '請輸入客戶ID!' }],
+    },
   },
   {
     title: '公司名稱',
     name: 'CompanyName',
     tableItem: {},
-    formItem: {},
+    formItem: { rules: [{ required: true, message: '請輸入' }] },
     searchItem: {},
   },
   {
