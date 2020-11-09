@@ -3,17 +3,16 @@ import $$ from 'cmn-utils'
 //收參數  變更 OFFSET
 //用LOCAL  WEBAPI
 export async function getData(payload) {
-  console.log('payload', payload)
+  console.log('getData  payload====', payload)
 
-  const pageNum = 1
-  const pageSize = 10
-  if (payload !== undefined) {
-    pageNum = payload.pageNum
-    pageSize = payload.pageSize
-  }
-  
-  const offset = pageNum * pageSize
-  const _url = `https://localhost:44347/api/Customer/GetList?offset=${offset}&limit=${pageSize}`
+  var offset =
+    payload.pageData.pageNum * payload.pageData.pageSize -
+    payload.pageData.pageSize
+
+  console.log('offset====', offset)
+  const _url = `https://localhost:44347/api/Customer/GetList?offset=${offset}&limit=${
+    payload.pageData.pageSize
+  }&filters=${JSON.stringify(payload.pageData.filters)}`
   return $$.get(
     _url,
     {},

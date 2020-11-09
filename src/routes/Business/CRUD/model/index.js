@@ -21,7 +21,7 @@ export default modelEnhance({
         if (pathname === '/crud' && !LOADED) {
           LOADED = true
           dispatch({
-            type: 'init', //enter page will 进入页面加载 init
+            type: 'init',
           })
         }
       })
@@ -32,53 +32,36 @@ export default modelEnhance({
     // 进入页面加载
     *init({ payload }, { call, put, select }) {
       const { pageData } = yield select((state) => state.crud)
-      // const resp = yield call(getData, payload)
-      // if (resp.success) {
-      //   console.log('resp success data=', resp)
-      //   pageData.list = resp.result
-      //   pageData.total = resp.totalRowCount
-      //   pageData.totalPages = resp.totalPage
-      // } else {
-      //   alert('none data')
-      //   pageData.list = []
-      // }
-
-      console.log('pageData=', pageData)
-
-      //@@  save data at state.pageData ?
-      //this.pros.state.pageData = pageData
-
       yield put({
         type: 'getPageInfo',
         payload: {
           pageData: pageData.startPage(1, 10),
-          pageNum: 1,
         },
       })
-      // yield put({
-      //   type: 'getEmployees',
-      // })
+      yield put({
+        type: 'getEmployees',
+      })
     },
     // 获取分页数据
     *getPageInfo({ payload }, { call, put }) {
       const { pageData } = payload
+      // yield put({
+      //   type: '@request',
+      //   payload: {
+      //     valueField: 'pageData',
+      //     url: '/crud/getList',
+      //     pageInfo: pageData,
+      //   },
+      // })
 
-      console.log('enter getPageInfo')
-      console.log('payload=', payload)
-
+      const resp = yield call(getData, payload)
       yield put({
-        type: '@request',
-        payload: {
-          valueField: 'pageData',
-          url: '/crud/getList',
-          pageInfo: pageData,
-        },
+        type: 'getDataSuccess',
+        payload: { resp, pageNum: payload.pageNum },
       })
     },
     // 保存 之后查询分页
     *save({ payload }, { call, put, select, take }) {
-      alert('save')
-
       const { values, success } = payload
       const { pageData } = yield select((state) => state.crud)
       // put是非阻塞的 put.resolve是阻塞型的
@@ -118,17 +101,29 @@ export default modelEnhance({
       success()
     },
     // 获取员工列表
-    *getEmployees({ payload }, { call, put }) {
-      yield put({
-        type: '@request',
-        afterResponse: (resp) => resp.data,
-        payload: {
-          valueField: 'employees',
-          url: '/crud/getWorkEmployee',
-        },
-      })
-    },
+    // *getEmployees({ payload }, { call, put }) {
+    //   yield put({
+    //     type: '@request',
+    //     afterResponse: (resp) => resp.data,
+    //     payload: {
+    //       valueField: 'employees',
+    //       url: '/crud/getWorkEmployee',
+    //     },
+    //   })
+    // },
   },
 
-  reducers: {},
+  reducers: {
+    getDataSuccess(state, { payload }) {
+      console.log('getDataSuccess  payload=', payload)
+      state.pageData.list = payload.resp.result
+      state.pageData.total = payload.resp.totalRowCount
+      state.pageData.totalPages = payload.resp.totalPage
+
+      return {
+        ...state,
+        data: payload,
+      }
+    },
+  },
 })
