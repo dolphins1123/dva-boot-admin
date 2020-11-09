@@ -28,11 +28,52 @@ export async function getData(payload) {
     .catch((e) => console.log(e))
 }
 
-//update
-export async function UpdateData(payload) {
+//更新
+export async function Update(payload) {
   const model = payload //JSON.stringify(payload)
 
   const _url = 'https://localhost:44347/api/Customer/UPDATE'
+  return $$.post(
+    _url,
+    model,
+
+    {
+      //responseType: null,  // 不处理返回结果
+      afterResponse: null, // 不走公共 afterResponse
+    }
+  )
+    .then((resp) => {
+      console.log('resp.success=', resp.success)
+      return resp.success
+    })
+    .catch((e) => console.log(e))
+}
+
+//新增
+export async function Create(payload) {
+  const model = payload //JSON.stringify(payload)
+
+  const _url = 'https://localhost:44347/api/Customer/Create'
+  return $$.post(
+    _url,
+    model,
+
+    {
+      //responseType: null,  // 不处理返回结果
+      afterResponse: null, // 不走公共 afterResponse
+    }
+  )
+    .then((resp) => {
+      console.log('resp.success=', resp.success)
+      return resp.success
+    })
+    .catch((e) => console.log(e))
+}
+
+export async function Delete(payload) {
+  const model = payload //JSON.stringify(payload)
+
+  const _url = 'https://localhost:44347/api/Customer/Delete'
   return $$.post(
     _url,
     model,
