@@ -8,6 +8,9 @@ import SearchBar from 'components/SearchBar'
 import DataTable from 'components/DataTable'
 import { ModalForm } from 'components/Modal'
 import createColumns from './columns'
+
+
+
 import './index.less'
 const { Content, Header, Footer } = Layout
 const Pagination = DataTable.Pagination
@@ -105,18 +108,34 @@ export default class extends BaseComponent {
       // 新增、修改都会进到这个方法中，
       // 可以使用主键或是否有record来区分状态
       onSubmit: (values) => {
-        dispatch({
-          type: 'crud/save',
-          payload: {
-            values,
-            success: () => {
-              this.setState({
-                record: null,
-                visible: false,
-              })
+        // 新增時 this.state.record   is null
+        if (this.state.record === null) {
+          dispatch({
+            type: 'crud/create',
+            payload: {
+              values,
+              success: () => {
+                this.setState({
+                  record: null,
+                  visible: false,
+                })
+              },
             },
-          },
-        })
+          })
+        } else {
+          dispatch({
+            type: 'crud/save',
+            payload: {
+              values,
+              success: () => {
+                this.setState({
+                  record: null,
+                  visible: false,
+                })
+              },
+            },
+          })
+        }
       },
     }
     //JSX

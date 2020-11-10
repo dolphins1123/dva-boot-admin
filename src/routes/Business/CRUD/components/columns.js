@@ -21,7 +21,6 @@ export default (self, employees) => [
     },
 
     formItem: {
-     
       rules: [{ required: true, message: '請輸入客戶ID!' }],
     },
   },
@@ -35,10 +34,11 @@ export default (self, employees) => [
   {
     title: '城市',
     name: 'City',
-    // dict: [
-    //   { code: '0', codeName: '城市' },
-    //   { code: '1', codeName: '乡村' },
-    // ],
+    dict: [
+      { code: '02', codeName: '臺北' },
+      { code: '04', codeName: '臺中' },
+      { code: '07', codeName: '高雄' },
+    ],
     tableItem: {},
     formItem: {
       type: 'select',

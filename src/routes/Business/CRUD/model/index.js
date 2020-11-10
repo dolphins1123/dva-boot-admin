@@ -45,14 +45,6 @@ export default modelEnhance({
     // 获取分页数据
     *getPageInfo({ payload }, { call, put }) {
       const { pageData } = payload
-      // yield put({
-      //   type: '@request',
-      //   payload: {
-      //     valueField: 'pageData',
-      //     url: '/crud/getList',
-      //     pageInfo: pageData,
-      //   },
-      // })
 
       const resp = yield call(getData, payload)
       yield put({
@@ -68,8 +60,23 @@ export default modelEnhance({
 
       //KEN修改  UPDATE  .改進SERVICE 的API
 
-      const isSuccess = yield call(Update, payload.values)
-      console.log('isSuccess=', isSuccess)
+      const isUpdOK = yield call(Update, payload.values)
+      console.log('isUpdOK=', isUpdOK)
+
+      yield put({
+        type: 'getPageInfo',
+        payload: { pageData },
+      })
+      success()
+    },
+    //新增資料資料
+    *create({ payload }, { call, put, select, take }) {
+      const { values, success } = payload
+      const { pageData } = yield select((state) => state.crud)
+      // put是非阻塞的 put.resolve是阻塞型的
+
+      const isAddOK = yield call(Create, payload.values)
+      console.log('isAddOK=', isAddOK)
 
       yield put({
         type: 'getPageInfo',
@@ -84,9 +91,12 @@ export default modelEnhance({
       const { records, success } = payload
       const { pageData } = yield select((state) => state.crud)
 
-      console.log('payload.values =', payload.values)
+      console.log('remove  records  =', records)
 
-      const isSuccess = yield call(Delete, payload.values)
+      const isSuccess = yield call(Delete, records)
+
+      console.log('isSuccess', isSuccess)
+
       // yield put({
       //   type: '@request',
       //   payload: {
