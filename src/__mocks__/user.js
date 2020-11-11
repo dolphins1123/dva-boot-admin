@@ -72,11 +72,7 @@ export default ({ fetchMock, delay, mock, toSuccess, toError }) => {
               },
               {
                 name: '数据表格',
-                path: '/datatable',
-              },
-              {
-                name: '数据表格2',
-                path: '/datatable2', //ken
+                path: '/datatable', //ken MENU  返回USER的MENU TREE
               },
               {
                 name: '表单',

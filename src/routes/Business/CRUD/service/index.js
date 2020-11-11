@@ -3,13 +3,10 @@ import $$ from 'cmn-utils'
 //收參數  變更 OFFSET
 //用LOCAL  WEBAPI
 export async function getData(payload) {
-  console.log('getData  payload====', payload)
-
   var offset =
     payload.pageData.pageNum * payload.pageData.pageSize -
     payload.pageData.pageSize
 
-  console.log('offset====', offset)
   const _url = `http://127.0.0.1/crud/api/Customer/GetList?offset=${offset}&limit=${
     payload.pageData.pageSize
   }&filters=${JSON.stringify(payload.pageData.filters)}`
@@ -22,7 +19,6 @@ export async function getData(payload) {
     }
   )
     .then(function (resp) {
-      console.log(resp)
       return resp
     })
     .catch((e) => console.log(e))
@@ -91,8 +87,8 @@ export async function Delete(payload) {
     }
   )
     .then(function (resp) {
-      console.log(resp)
-      return resp
+      console.log('resp.success=', resp.success)
+      return toSuccess(resp, 400)
     })
     .catch((e) => console.log(e))
 }

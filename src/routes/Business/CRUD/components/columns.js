@@ -35,9 +35,9 @@ export default (self, employees) => [
     title: '城市',
     name: 'City',
     dict: [
-      { code: '02', codeName: '臺北' },
-      { code: '04', codeName: '臺中' },
-      { code: '07', codeName: '高雄' },
+      { code: '臺北市', codeName: '臺北市' },
+      { code: '臺中市', codeName: '臺中市' },
+      { code: '高雄市', codeName: '高雄市' },
     ],
     tableItem: {},
     formItem: {

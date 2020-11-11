@@ -19,7 +19,6 @@ import Column from './Widgets/Column'
 import TransferTree from './Widgets/TransferTree'
 import SearchBar from './Widgets/SearchBar'
 import DataTable from './Widgets/DataTable'
-import DataTable2 from './Widgets/DataTable2' //ken
 import Form from './Widgets/Form'
 import EC from './Widgets/Charts/EC'
 import G2 from './Widgets/Charts/G2'
@@ -73,8 +72,7 @@ const routesConfig = (app) => [
       Alerts(),
       Button(),
       Modal(),
-      DataTable(app),
-      DataTable2(app), //ken
+      DataTable(app), //KEN  ADD MENU
       Form(app),
       TransferTree(app),
       BaseComponent(),

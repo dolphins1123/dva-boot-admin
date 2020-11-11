@@ -12,7 +12,10 @@ export default modelEnhance({
 
   state: {
     pageData: PageHelper.create(),
-    employees: [],
+    pageDataSort: PageHelper.create(),
+    dataList: {
+      list: [],
+    },
   },
 
   subscriptions: {
@@ -91,20 +94,10 @@ export default modelEnhance({
       const { records, success } = payload
       const { pageData } = yield select((state) => state.crud)
 
-      console.log('remove  records  =', records)
+      //      console.log('remove  records  =', records) //多筆
 
       const isSuccess = yield call(Delete, records)
 
-      console.log('isSuccess', isSuccess)
-
-      // yield put({
-      //   type: '@request',
-      //   payload: {
-      //     notice: true,
-      //     url: '/crud/bathDelete',
-      //     data: records.map((item) => item.id),
-      //   },
-      // })
       yield put({
         type: 'getPageInfo',
         payload: { pageData },
