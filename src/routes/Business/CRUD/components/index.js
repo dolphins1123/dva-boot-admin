@@ -9,8 +9,6 @@ import DataTable from 'components/DataTable'
 import { ModalForm } from 'components/Modal'
 import createColumns from './columns'
 
-
-
 import './index.less'
 const { Content, Header, Footer } = Layout
 const Pagination = DataTable.Pagination
@@ -112,7 +110,9 @@ export default class extends BaseComponent {
         if (this.state.record === null) {
           dispatch({
             type: 'crud/create',
+
             payload: {
+              notice: true,
               values,
               success: () => {
                 this.setState({
@@ -121,6 +121,9 @@ export default class extends BaseComponent {
                 })
               },
             },
+            // afterResponse: (resp) => resp, // 可以让我们有机会处理反回的数据，非必需
+            success: (resp) => {}, // 在dispatch结束后得到成功的回调，非必需
+            error: (e) => {}, // 在dispatch结束后得到失败的回调，非必需
           })
         } else {
           dispatch({

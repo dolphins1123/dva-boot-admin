@@ -88,7 +88,7 @@ export async function Delete(payload) {
   )
     .then(function (resp) {
       console.log('resp.success=', resp.success)
-      return toSuccess(resp, 400)
+      return resp
     })
     .catch((e) => console.log(e))
 }

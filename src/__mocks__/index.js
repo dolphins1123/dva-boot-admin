@@ -11,4 +11,4 @@ import formData from './form'
  * 加载mock文件
  * packMock(mock1[,mock2])
  */
-packMock(user, crud, tree, datatable,  charts, formData)
+packMock(user, crud, tree, datatable, charts, formData)

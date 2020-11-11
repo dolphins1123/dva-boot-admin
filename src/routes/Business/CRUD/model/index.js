@@ -1,6 +1,7 @@
 import modelEnhance from '@/utils/modelEnhance'
 import PageHelper from '@/utils/pageHelper'
 import { getData, Update, Create, Delete } from '../service/index'
+
 /**
  * 当第一次加载完页面时为true
  * 可以用这个值阻止切换页面时
@@ -83,6 +84,7 @@ export default modelEnhance({
 
       yield put({
         type: 'getPageInfo',
+
         payload: { pageData },
       })
       success()
@@ -94,7 +96,7 @@ export default modelEnhance({
       const { records, success } = payload
       const { pageData } = yield select((state) => state.crud)
 
-      //      console.log('remove  records  =', records) //多筆
+      console.log('success   =', success) //多筆
 
       const isSuccess = yield call(Delete, records)
 
